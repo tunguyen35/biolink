@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tú Nguyễn - Biolink & Tools</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #FAFAFA;
+      --bg-secondary: #FFFFFF;
+      --bg-glass: rgba(255, 255, 255, 0.85);
+      --text-primary: #1A1A1A;
+      --text-secondary: #6B7280;
+      --text-tertiary: #9CA3AF;
+      --accent-primary: #6366F1;
+      --accent-secondary: #8B5CF6;
+      --accent-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.03);
+      --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      position: relative;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-menu {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 10;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-primary);
+      background: var(--bg-secondary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tab-btn .icon {
+      font-size: 18px;
+    }
+
+    .pages-container {
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+      max-height: 600px;
+    }
+
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 24px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    #home-page {
+      background: url('https://lh3.googleusercontent.com/d/1phuWBfFh7Xkf964p_I0aArsuIz_hCnf-') center/cover no-repeat;
+      padding: 40px 24px;
+    }
+
+    #home-page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+      z-index: 0;
+    }
+
+    .profile-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-glass);
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid white;
+      object-fit: cover;
+      margin: -80px auto 24px;
+      background: #eee;
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s ease;
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e61935;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-bio {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .social-btn.facebook {
+      background: #1877F2;
+    }
+
+    .social-btn.telegram {
+      background: #229ED9;
+    }
+
+    .social-btn.instagram {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+
+    #tools-page {
+      background: var(--bg-primary);
+    }
+
+    .search-container {
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      padding-bottom: 16px;
+      z-index: 5;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 44px;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 4px;
+      display: none;
+    }
+
+    .clear-btn.visible {
+      display: block;
+    }
+
+    .search-count {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .search-count.hidden {
+      display: none;
+    }
+
+    .tools-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .tool-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .tool-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .tool-title mark {
+      background: #FDE047;
+      color: var(--text-primary);
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .tool-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background: var(--accent-gradient);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .tool-link:hover {
+      transform: translateX(2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      display: none;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    .no-results-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .no-results-text {
+      font-size: 18px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .no-results-hint {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .music-btn-floating {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(99, 102, 241, 0.2);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      font-size: 24px;
+    }
+
+    .music-btn-floating:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 48px rgba(99, 102, 241, 0.3);
+    }
+
+    .music-btn-floating.playing {
+      animation: pulse-ring 1.5s infinite;
+      background: var(--accent-gradient);
+      color: white;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6);
+      }
+      70% {
+        box-shadow: 0 0 0 20px rgba(99, 102, 241, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+      }
+    }
+
+    @media (min-width: 640px) {
+      .app-container {
+        max-width: 480px;
+      }
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .app-container {
+        max-width: 900px;
+      }
+      .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .page::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .page::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .page::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="tab-menu">
+      <button class="tab-btn active" data-page="home">
+        <span class="icon">🏠</span>
+        <span>Trang chủ</span>
+      </button>
+      <button class="tab-btn" data-page="tools">
+        <span class="icon">🛠️</span>
+        <span>Tools</span>
+      </button>
+    </div>
+
+    <div class="pages-container">
+      <div class="page active" id="home-page">
+        <div class="profile-content">
+          <div class="profile-card">
+            <img src="https://lh3.googleusercontent.com/d/1azbuicbg0TBGLkVskTL34O-zU0_A4_32" alt="Avatar" class="avatar">
+            <h1 class="profile-name">Tú Nguyễn</h1>
+            <p class="profile-bio">Thích ngắm gái 😎</p>
+            <div class="social-links">
+              <a href="https://www.facebook.com/nguyen.v.tu.9849" target="_blank" class="social-btn facebook">Facebook</a>
+              <a href="https://t.me/tunguyendev" target="_blank" class="social-btn telegram">Telegram</a>
+              <a href="https://www.instagram.com/meomeo_1605/" target="_blank" class="social-btn instagram">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="tools-page">
+        <div class="search-container">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm công cụ..." autocomplete="off">
+            <button class="clear-btn" id="clearBtn">✕</button>
+          </div>
+          <div class="search-count hidden" id="searchCount">Tìm thấy <strong>0</strong> công cụ</div>
+        </div>
+
+        <div class="tools-grid" id="toolsGrid">
+          <div class="tool-card">
+            <h3 class="tool-title">Dự Báo Thời Tiết</h3>
+            <p class="tool-desc">Xem dự báo thời tiết theo thời gian thực tới đa 5 ngày</p>
+            <a href="https://weatherdaily.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Get Link Url Ảnh Google Drive</h3>
+            <p class="tool-desc">Chuyển đổi link ảnh Google Drive để lấy Url ảnh trực tiếp</p>
+            <a href="https://imageurl.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Trình Beautiful Code</h3>
+            <p class="tool-desc">Trình làm đẹp mã (code beautifier) giúp định dạng lại mã HTML, CSS, JavaScript</p>
+            <a href="https://beautyfiercode.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Get Link Url Scribd</h3>
+            <p class="tool-desc">Get link xem các file trên Scribd không cần đăng nhập tài khoản</p>
+            <a href="https://scribdview.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Chỉnh Sửa Ảnh Cơ Bản</h3>
+            <p class="tool-desc">Chức năng cơ bản: chỉnh sửa kích thước, nén dung lượng, ghép ảnh, tạo ảnh thẻ</p>
+            <a href="https://imgedit.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Cắt Khung Ảnh (Crop Image)</h3>
+            <p class="tool-desc">Chức năng cắt ảnh cho phép người dùng loại bỏ các phần không mong muốn</p>
+            <a href="https://imagecrop.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Âm Dương Lịch</h3>
+            <p class="tool-desc">Xem lịch âm dương, hỗ trợ tra cứu đổi lịch ngày Dương ↔ Âm nhanh chóng</p>
+            <a href="https://amduonglich.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">CSS Grid Generator</h3>
+            <p class="tool-desc">Công cụ trực quan giúp tạo bố cục lưới bằng CSS. Sinh ra mã HTML và CSS sẵn sàng</p>
+            <a href="https://cssgrid.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Video Downloader</h3>
+            <p class="tool-desc">Tải xuống video Tiktok, Facebook, Douyin</p>
+            <a href="https://videodownloadpro.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Checker Url Unshort</h3>
+            <p class="tool-desc">Kiểm tra đại chỉ thật của những đường link đã bị rút gọn</p>
+            <a href="https://unshortchecker.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Tạo Bảng HTML</h3>
+            <p class="tool-desc">Tạo bảng dữ liệu bằng mã HTML một cách nhanh chóng</p>
+            <a href="https://tablegenerator.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Trình ghi chú Note Pad</h3>
+            <p class="tool-desc">Ghi chú mọi ý tưởng một cách nhanh chóng</p>
+            <a href="https://speednote.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Xoá phông nền ảnh</h3>
+            <p class="tool-desc">Xoá phông nền ảnh tuỳ chọn đơn giản</p>
+            <a href="https://removebgpro.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Color Generator</h3>
+            <p class="tool-desc">Tạo hệ màu chuyên sâu, hỗ trợ xuất màu theo nhiều chuẩn (HEX, HSL, OKLCH)</p>
+            <a href="https://colorpalette.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Color Hex</h3>
+            <p class="tool-desc">Công cụ tạo bảng màu ngẫu nhiên và khám phá màu sắc thịnh hành</p>
+            <a href="https://palettego.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">QR Generator Pro</h3>
+            <p class="tool-desc">Tạo mã QR miễn phí</p>
+            <a href="https://qrcodepro.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">QR Scan Pro</h3>
+            <p class="tool-desc">Quét mã QR nhanh chóng và chính xác</p>
+            <a href="https://qrscanpro.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+          <div class="tool-card">
+            <h3 class="tool-title">Code Editor</h3>
+            <p class="tool-desc">Viết, chạy và xem trước mã HTML, CSS, JavaScript ngay trên trình duyệt</p>
+            <a href="https://codeboxpro.pages.dev/" class="tool-link" target="_blank">Dùng ngay ↗</a>
+          </div>
+        </div>
+
+        <div class="no-results" id="noResults">
+          <div class="no-results-icon">🔍</div>
+          <div class="no-results-text">Không tìm thấy công cụ phù hợp</div>
+          <div class="no-results-hint">Hãy thử tìm kiếm với từ khóa khác</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="music-btn-floating" id="musicBtn" title="Phát nhạc nền">
+    <span class="music-icon">🎵</span>
+  </button>
+
+  <audio id="bgMusic" loop>
+    <source src="music/nen.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Tab switching - SIMPLE VERSION
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const allPages = document.querySelectorAll('.page');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const targetPage = this.getAttribute('data-page');
+        
+        // Remove active from all buttons
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active to clicked button
+        this.classList.add('active');
+        
+        // Hide all pages
+        allPages.forEach(page => page.classList.remove('active'));
+        
+        // Show target page
+        document.getElementById(targetPage + '-page').classList.add('active');
+        
+        // Focus search if tools page
+        if (targetPage === 'tools') {
+          setTimeout(() => {
+            document.getElementById('searchInput').focus();
+          }, 300);
+        }
+      });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearBtn');
+    const searchCount = document.getElementById('searchCount');
+    const toolsGrid = document.getElementById('toolsGrid');
+    const noResults = document.getElementById('noResults');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      toolCards.forEach(card => {
+        const title = card.querySelector('.tool-title');
+        const originalText = title.getAttribute('data-original') || title.textContent;
+        
+        if (!title.hasAttribute('data-original')) {
+          title.setAttribute('data-original', originalText);
+        }
+
+        if (searchTerm === '' || originalText.toLowerCase().includes(searchTerm)) {
+          card.style.display = 'block';
+          visibleCount++;
+          
+          if (searchTerm !== '') {
+            const regex = new RegExp('(' + searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            title.innerHTML = originalText.replace(regex, '<mark>$1</mark>');
+          } else {
+            title.textContent = originalText;
+          }
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update UI
+      if (searchTerm !== '') {
+        searchCount.classList.remove('hidden');
+        searchCount.querySelector('strong').textContent = visibleCount;
+        clearBtn.classList.add('visible');
+      } else {
+        searchCount.classList.add('hidden');
+        clearBtn.classList.remove('visible');
+      }
+
+      if (visibleCount === 0 && searchTerm !== '') {
+        toolsGrid.style.display = 'none';
+        noResults.classList.add('visible');
+      } else {
+        toolsGrid.style.display = 'grid';
+        noResults.classList.remove('visible');
+      }
+    });
+
+    clearBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      searchInput.dispatchEvent(new Event('input'));
+      searchInput.focus();
+    });
+
+    // Music player
+    const musicBtn = document.getElementById('musicBtn');
+    const bgMusic = document.getElementById('bgMusic');
+
+    musicBtn.addEventListener('click', function() {
+      if (bgMusic.paused) {
+        bgMusic.play().then(() => {
+          this.classList.add('playing');
+          this.querySelector('.music-icon').textContent = '⏸️';
+        }).catch(() => {
+          alert('⚠️ Trình duyệt chặn phát nhạc tự động!');
+        });
+      } else {
+        bgMusic.pause();
+        this.classList.remove('playing');
+        this.querySelector('.music-icon').textContent = '🎵';
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === '/') {
+        e.preventDefault();
+        tabButtons[1].click();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+      }
+    });
+
+    console.log('✅ App loaded successfully!');
+  </script>
+</body>
+</html>
